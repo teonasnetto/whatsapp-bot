@@ -1,0 +1,38 @@
+# Ignorar node_modules
+node_modules
+# Ignorar Session data
+*.data.json
+# Ignorar package-lok
+package-lock.json
+#Ignorar node-persist
+.node-persist
+#Ignorar .env
+*.env
+#Ignorar arquivo de teste
+test.js
+#Ignorar logs
+*.log
+logs/session/*
+#Ignorar arquivos de mídia
+media/*.mp4
+media/img/tmp/*.jpg
+media/img/tmp/*.png
+media/*.gif
+media/tts/*.mp3
+media/audios/*.mp3
+media/videos/*.mp4
+media/videos/*.jpg
+#Ignorar DB e etc
+database/db/*.db
+database/json/bot.json
+database/json/antiflood.json
+# managed by open-wa. see: https://github.com/open-wa/wa-automate-nodejs/issues/1632
+**.data.json
+# end managed by open-wa. see: https://github.com/open-wa/wa-automate-nodejs/issues/1632
+# managed
+**.node-persist**
+# end managed
+
+# managed
+**_IGNORE_**
+# end managed
