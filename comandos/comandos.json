@@ -14,7 +14,8 @@
         "!ddd",
         "!anime",
         "!animelanc",
-        "!qualmusica"
+        "!qualmusica",
+        "!stt"
     ],
     "info":[
         "!ajuda","!menu",
@@ -132,6 +133,7 @@
         "!mudarlimite",
         "!alterartipo",
         "!grupos",
+        "!gruposcadastrados",
         "!tipos",
         "!rtodos",
         "!r",

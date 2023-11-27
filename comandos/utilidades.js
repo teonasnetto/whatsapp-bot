@@ -16,7 +16,7 @@ module.exports = utilidades = async(client,message) => {
         const args =  commands.split(' ')
         const uaOverride = 'WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
 
-        switch(command){      
+        switch(command){
             case "!tabela":
                 var tabela = await api.obterTabelaNick()
                 await client.reply(chatId, criarTexto(msgs_texto.utilidades.tabela.resposta, tabela), id)
@@ -31,7 +31,7 @@ module.exports = utilidades = async(client,message) => {
                     await client.reply(chatId, err.message, id)
                 }
                 break
-                
+
             case "!ddd":
                 var DDD = null
                 if(quotedMsg){
@@ -74,6 +74,24 @@ module.exports = utilidades = async(client,message) => {
                     client.reply(chatId, erroComandoMsg(command), id)
                 }
                 break
+
+                case "!stt":{
+                    if(quotedMsg && (quotedMsg.type === "ptt" || quotedMsg.type === "audio") ){
+                        let mediaData = await decryptMedia(quotedMsg, uaOverride)
+                        let audioOriginal = path.resolve(`./media/audios/${obterNomeAleatorio(".mp3")}`)
+                        fs.writeFileSync(audioOriginal, mediaData, "base64")
+                        try{
+                            let textoAudio = await api.obterTextoDoAudio(audioOriginal)
+                            client.reply(chatId, textoAudio, id)
+                            fs.unlinkSync(audioOriginal)
+                        } catch(err){
+                            fs.unlinkSync(audioOriginal)
+                            client.reply(chatId, err.message, id)
+                        }
+                    } else {
+                        client.reply(chatId, erroComandoMsg(command), id)
+                    }
+                    break}
 
             case "!qualmusica":
                 var dadosMensagem = quotedMsg ? quotedMsg : message
@@ -159,7 +177,7 @@ module.exports = utilidades = async(client,message) => {
                     await client.reply(chatId, err.message ,id)
                 }
                 break
-            
+
             case "!anime":
                 if(isMedia || quotedMsg){
                     var dadosMensagem = {
@@ -200,7 +218,7 @@ module.exports = utilidades = async(client,message) => {
                     client.reply(chatId, err.message, id)
                 }
                 break
-            
+
             case "!traduz":
                 var usuarioTexto = "", idiomaTraducao = 'pt'
                 if(quotedMsg  && quotedMsg.type == "chat"){
@@ -220,8 +238,8 @@ module.exports = utilidades = async(client,message) => {
                 } catch(err){
                     client.reply(chatId, err.message, id)
                 }
-                break  
-            
+                break
+
             case '!voz':
                 var usuarioTexto = '', idMensagem = id
                 if (args.length === 1) {
@@ -271,6 +289,6 @@ module.exports = utilidades = async(client,message) => {
     } catch(err){
         throw err
     }
-    
+
 
 }

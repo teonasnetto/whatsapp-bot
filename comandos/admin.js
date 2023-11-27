@@ -12,12 +12,12 @@ const fs = require("fs-extra")
 const path = require("path")
 const {botAlterarLimitador, botInfo, botAlterarLimiteDiario, botQtdLimiteDiario, botAlterarLimitarMensagensPv, botAlterarAutoSticker, botAlterarAntitrava, botAlterarPvLiberado} = require('../lib/bot')
 
-module.exports = admin = async(client,message) => {
+let admin = async(client,message) => {
     try{
         const {id, chatId, sender, isGroupMsg, t, chat, caption, type, mimetype, isMedia, quotedMsg, quotedMsgObj, mentionedJidList } = message
         let { body } = message
         const commands = caption || body || ''
-        var command = commands.toLowerCase().split(' ')[0] || ''
+        let command = commands.toLowerCase().split(' ')[0] || ''
         command = removerNegritoComando(command)
         const args =  commands.split(' ')
         const botNumber = await client.getHostNumber()
@@ -32,12 +32,12 @@ module.exports = admin = async(client,message) => {
                 await client.sendText(chatId, menu.menuAdmin())
                 break
 
-            case "!infocompleta":
-                var fotoBot = await client.getProfilePicFromServer(botNumber+'@c.us')
-                var infoBot = JSON.parse(fs.readFileSync(path.resolve("database/json/bot.json")))
-                var expiracaoLimiteDiario = timestampParaData(infoBot.limite_diario.expiracao * 1000)
-                var botInicializacaoData = timestampParaData(infoBot.iniciado)
-                var resposta = criarTexto(msgs_texto.admin.infocompleta.resposta_superior, infoBot.criador, infoBot.nome, botInicializacaoData, version)
+            case "!infocompleta":{
+                let fotoBot = await client.getProfilePicFromServer(botNumber+'@c.us')
+                let infoBot = JSON.parse(fs.readFileSync(path.resolve("database/json/bot.json")))
+                let expiracaoLimiteDiario = timestampParaData(infoBot.limite_diario.expiracao * 1000)
+                let botInicializacaoData = timestampParaData(infoBot.iniciado)
+                let resposta = criarTexto(msgs_texto.admin.infocompleta.resposta_superior, infoBot.criador, infoBot.nome, botInicializacaoData, version)
                 // AUTO-STICKER
                 resposta += (infoBot.autosticker) ? msgs_texto.admin.infocompleta.resposta_variavel.autosticker.on: msgs_texto.admin.infocompleta.resposta_variavel.autosticker.off
                 // PV LIBERADO
@@ -55,14 +55,14 @@ module.exports = admin = async(client,message) => {
                 resposta += criarTexto(msgs_texto.admin.infocompleta.resposta_inferior, blockNumber.length, infoBot.cmds_executados, ownerNumber)
                 if(fotoBot && fotoBot != "ERROR: 404") await client.sendFileFromUrl(chatId, fotoBot, "foto.jpg", resposta, id)
                 else await client.reply(chatId, resposta, id)
-                break
+                break}
 
-            case '!entrargrupo':
+            case '!entrargrupo':{
                 if (args.length < 2) return await client.reply(chatId, erroComandoMsg(command), id)
-                var linkGrupo = args[1]
+                let linkGrupo = args[1]
                 // var totalGrupos = await client.getAllGroups()
-                var linkValido = linkGrupo.match(/(https:\/\/chat.whatsapp.com)/gi)
-                var conviteInfo = await client.inviteInfo(linkGrupo)
+                let linkValido = linkGrupo.match(/(https:\/\/chat.whatsapp.com)/gi)
+                let conviteInfo = await client.inviteInfo(linkGrupo)
                 if (!linkValido) return await client.reply(chatId, msgs_texto.admin.entrar_grupo.link_invalido, id)
                 // if (totalGrupos.length > 10) return await client.reply(chatId, msgs_texto.admin.entrar_grupo.maximo_grupos, id)
                 if (conviteInfo.status === 200) {
@@ -74,7 +74,7 @@ module.exports = admin = async(client,message) => {
                 else {
                     await client.reply(chatId, msgs_texto.admin.entrar_grupo.link_invalido, id)
                 }
-                break
+                break}
 
             case '!sair':
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
@@ -82,91 +82,89 @@ module.exports = admin = async(client,message) => {
                 await client.leaveGroup(groupId)
                 break
 
-            case '!listablock':
-                var resposta = criarTexto(msgs_texto.admin.listablock.resposta_titulo, blockNumber.length)
+            case '!listablock':{
+                let resposta = criarTexto(msgs_texto.admin.listablock.resposta_titulo, blockNumber.length)
                 for (let i of blockNumber) resposta += criarTexto(msgs_texto.admin.listablock.resposta_itens, i.replace(/@c.us/g,''))
                 await client.sendTextWithMentions(chatId, resposta, id)
-                break
+                break}
 
-            case '!limpartudo':
-                var chats = await client.getAllChats()
-                for (var c of chats) await client.deleteChat(c.id)
+            case '!limpartudo':{
+                let chats = await client.getAllChats()
+                for (let c of chats) await client.deleteChat(c.id)
                 await client.sendText(ownerNumber+"@c.us", msgs_texto.admin.limpar.limpar_sucesso)
-                break
+                break}
 
-            case "!bcmdglobal":
+            case "!bcmdglobal":{
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command) ,id)
-                var usuarioComandos = body.slice(12).split(" "), respostaBloqueio = await bloquearComandosGlobal(usuarioComandos)
+                let usuarioComandos = body.slice(12).split(" "), respostaBloqueio = await bloquearComandosGlobal(usuarioComandos)
                 await client.reply(chatId, respostaBloqueio, id)
-                break
+                break}
 
-            case "!dcmdglobal":
+            case "!dcmdglobal":{
                 if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
-                var usuarioComandos = body.slice(12).split(" "), respostaDesbloqueio = await desbloquearComandosGlobal(usuarioComandos)
+                let usuarioComandos = body.slice(12).split(" "), respostaDesbloqueio = await desbloquearComandosGlobal(usuarioComandos)
                 await client.reply(chatId, respostaDesbloqueio, id)
-                break
+                break}
 
-            case '!limpar':
-                var chats = await client.getAllChats()
-                for (var c of chats) {
+            case '!limpar':{
+                let chats = await client.getAllChats()
+                for (let c of chats) {
                     if(c.id.match(/@c.us/g) && c.id != sender.id) await client.deleteChat(c.id)
                 }
                 await client.sendText(ownerNumber+"@c.us", msgs_texto.admin.limpar.limpar_sucesso)
-                break
+                break}
 
-            case '!rconfig':
+            case '!rconfig':{
                 await db.resetarGrupos()
                 await client.reply(chatId,msgs_texto.admin.rconfig.reset_sucesso,id)
-                break
+                break}
 
-            case '!sairgrupos':
-                var grupos = await client.getAllGroups()
-                for (var grupo of grupos) await client.leaveGroup(grupo.contact.id)
-                var resposta = criarTexto(msgs_texto.admin.sairtodos.resposta, grupos.length)
+            case '!sairgrupos':{
+                let grupos = await client.getAllGroups()
+                for (let grupo of grupos) await client.leaveGroup(grupo.contact.id)
+                let resposta = criarTexto(msgs_texto.admin.sairtodos.resposta, grupos.length)
                 await client.sendText(ownerNumber+"@c.us", resposta, id)
-                break
+                break}
 
-            case "!bloquear":
-                var usuariosBloqueados = []
+            case "!bloquear":{
+                let usuariosBloqueados = []
                 if(quotedMsg){
                     usuariosBloqueados.push(quotedMsgObj.author)
                 } else if(mentionedJidList.length > 1) {
                     usuariosBloqueados = mentionedJidList
                 } else {
-                    var numeroInserido = body.slice(10).trim()
+                    let numeroInserido = body.slice(10).trim()
                     if(numeroInserido.length == 0) return await client.reply(chatId, erroComandoMsg(command), id)
                     usuariosBloqueados.push(numeroInserido.replace(/\W+/g,"")+"@c.us")
                 }
-                for (var usuario of usuariosBloqueados){
+                for (let usuario of usuariosBloqueados){
                     if(await client.getContact(usuario)){
                         if(ownerNumber == usuario.replace(/@c.us/g, '')){
                             await client.sendTextWithMentions(chatId, criarTexto(msgs_texto.admin.bloquear.erro_dono, usuario.replace(/@c.us/g, '')))
-                        } else {
-                            if(blockNumber.includes(usuario)) {
+                        } else if(blockNumber.includes(usuario)) {
                                 await client.sendTextWithMentions(chatId, criarTexto(msgs_texto.admin.bloquear.ja_bloqueado, usuario.replace(/@c.us/g, '')))
                             } else {
                                 client.contactBlock(usuario)
                                 await client.sendTextWithMentions(chatId, criarTexto(msgs_texto.admin.bloquear.sucesso, usuario.replace(/@c.us/g, '')))
                             }
-                        }
                     } else {
                         await client.reply(chatId, criarTexto(msgs_texto.admin.bloquear.erro, usuario.replace("@c.us","")), id)
                     }
                 }
-                break
+                break}
 
-            case "!desbloquear":
+            case "!desbloquear":{
                 let usuariosDesbloqueados = []
                 if(quotedMsg){
                     usuariosDesbloqueados.push(quotedMsgObj.author)
                 } else if(mentionedJidList.length > 1) {
                     usuariosDesbloqueados = mentionedJidList
                 } else {
-                    var numeroInserido = body.slice(13).trim()
+                    let numeroInserido = body.slice(13).trim()
                     if(numeroInserido.length == 0) return await client.reply(chatId, erroComandoMsg(command), id)
                     usuariosDesbloqueados.push(numeroInserido.replace(/\W+/g,"")+"@c.us")
                 }
-                for (var usuario of usuariosDesbloqueados){
+                for (let usuario of usuariosDesbloqueados){
                     if(!blockNumber.includes(usuario)) {
                         await client.sendTextWithMentions(chatId, criarTexto(msgs_texto.admin.desbloquear.ja_desbloqueado, usuario.replace(/@c.us/g,'')))
                     } else {
@@ -174,10 +172,10 @@ module.exports = admin = async(client,message) => {
                         await client.sendTextWithMentions(chatId, criarTexto(msgs_texto.admin.desbloquear.sucesso, usuario.replace(/@c.us/g,'')))
                     }
                 }
-                break
+                break}
 
-            case "!autostickerpv":
-                var novoEstado = !botInfo().autosticker
+            case "!autostickerpv":{
+                let novoEstado = !botInfo().autosticker
                 if(novoEstado){
                     botAlterarAutoSticker(true)
                     await client.reply(chatId, msgs_texto.admin.autostickerpv.ativado,id)
@@ -185,10 +183,10 @@ module.exports = admin = async(client,message) => {
                     botAlterarAutoSticker(false)
                     await client.reply(chatId, msgs_texto.admin.autostickerpv.desativado,id)
                 }
-                break
+                break}
 
-            case "!pvliberado":
-                var novoEstado = !botInfo().pvliberado
+            case "!pvliberado":{
+                let novoEstado = !botInfo().pvliberado
                 if(novoEstado){
                     botAlterarPvLiberado(true)
                     await client.reply(chatId, msgs_texto.admin.pvliberado.ativado,id)
@@ -196,19 +194,19 @@ module.exports = admin = async(client,message) => {
                     botAlterarPvLiberado(false)
                     await client.reply(chatId, msgs_texto.admin.pvliberado.desativado,id)
                 }
-                break
+                break}
 
-            case "!fotobot":
+            case "!fotobot":{
                 if(isMedia || quotedMsg){
-                    var dadosMensagem = {
+                    let dadosMensagem = {
                         tipo : (isMedia) ? type : quotedMsg.type,
                         mimetype : (isMedia)? mimetype : quotedMsg.mimetype,
                         mensagem: (isMedia) ? message : quotedMsg
                     }
                     if(dadosMensagem.tipo === "image"){
-                        var mediaData = await decryptMedia(dadosMensagem.mensagem)
-                        var imagemBase64 = `data:${dadosMensagem.mimetype};base64,${mediaData.toString('base64')}`
-                        var res = await client.setProfilePic(imagemBase64)
+                        let mediaData = await decryptMedia(dadosMensagem.mensagem)
+                        let imagemBase64 = `data:${dadosMensagem.mimetype};base64,${mediaData.toString('base64')}`
+                        let res = await client.setProfilePic(imagemBase64)
                         if(res) await client.reply(chatId, msgs_texto.admin.fotobot.sucesso, id)
                         else await client.reply(chatId, msgs_texto.admin.fotobot.erro, id)
                     } else {
@@ -217,12 +215,12 @@ module.exports = admin = async(client,message) => {
                 } else {
                     return client.reply(chatId, erroComandoMsg(command) , id)
                 }
-                break
+                break}
 
-            case "!antitravapv":
-                var novoEstado = !botInfo().antitrava.status
+            case "!antitravapv":{
+                let novoEstado = !botInfo().antitrava.status
                 if(novoEstado){
-                    var maxCaracteres = args[1] || 1500
+                    let maxCaracteres = args[1] || 1500
                     if(isNaN(maxCaracteres) || maxCaracteres < 250) return await client.reply(chatId, msgs_texto.admin.antitrava.qtd_invalida, id)
                     botAlterarAntitrava(true, maxCaracteres)
                     await client.reply(chatId, criarTexto(msgs_texto.admin.antitrava.ligado, maxCaracteres), id)
@@ -230,10 +228,10 @@ module.exports = admin = async(client,message) => {
                     botAlterarAntitrava(false, 0)
                     await client.reply(chatId, msgs_texto.admin.antitrava.desligado, id)
                 }
-                break
+                break}
 
-            case "!limitediario":
-                var novoEstado = !botInfo().limite_diario.status
+            case "!limitediario":{
+                let novoEstado = !botInfo().limite_diario.status
                 if(novoEstado){
                     botAlterarLimiteDiario(true)
                     await client.reply(chatId, msgs_texto.admin.limitediario.ativado,id)
@@ -241,13 +239,13 @@ module.exports = admin = async(client,message) => {
                     botAlterarLimiteDiario(false)
                     await client.reply(chatId, msgs_texto.admin.limitediario.desativado,id)
                 }
-                break
+                break}
 
-            case "!taxalimite":
-                var novoEstado = !botInfo().limitecomandos.status
+            case "!taxalimite":{
+                let novoEstado = !botInfo().limitecomandos.status
                 if(novoEstado){
                     if(args.length !== 3) return await client.reply(chatId, erroComandoMsg(command), id)
-                    var qtd_max_minuto = args[1], tempo_bloqueio = args[2]
+                    let qtd_max_minuto = args[1], tempo_bloqueio = args[2]
                     if(isNaN(qtd_max_minuto) || qtd_max_minuto < 3) return await client.reply(chatId,msgs_texto.admin.limitecomandos.qtd_invalida,id)
                     if(isNaN(tempo_bloqueio) || tempo_bloqueio < 10) return await client.reply(chatId,msgs_texto.admin.limitecomandos.tempo_invalido,id)
                     botAlterarLimitador(true, parseInt(qtd_max_minuto), parseInt(tempo_bloqueio))
@@ -256,10 +254,10 @@ module.exports = admin = async(client,message) => {
                     botAlterarLimitador(false)
                     await client.reply(chatId, msgs_texto.admin.limitecomandos.desativado,id)
                 }
-                break
+                break}
 
-            case "!limitarmsgs":
-                var novoEstado = !botInfo().limitarmensagens.status
+            case "!limitarmsgs":{
+                let novoEstado = !botInfo().limitarmensagens.status
                 if(novoEstado){
                     if(args.length !== 3) return await client.reply(chatId, erroComandoMsg(command), id)
                     let max_msg = args[1], msgs_intervalo = args[2]
@@ -271,40 +269,40 @@ module.exports = admin = async(client,message) => {
                     botAlterarLimitarMensagensPv(false)
                     await client.reply(chatId, msgs_texto.admin.limitarmsgs.desativado,id)
                 }
-                break
+                break}
 
-            case "!mudarlimite":
+            case "!mudarlimite":{
                 if(!botInfo().limite_diario.status) return await client.reply(chatId, msgs_texto.admin.mudarlimite.erro_limite_diario,id)
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command),id)
-                var tipo = args[1].toLowerCase(), qtd = args[2]
+                let tipo = args[1].toLowerCase(), qtd = args[2]
                 if(qtd != -1) if(isNaN(qtd) || qtd < 5) return await client.reply(chatId, msgs_texto.admin.mudarlimite.invalido,id)
-                var alterou = await botQtdLimiteDiario(tipo, parseInt(qtd))
+                let alterou = await botQtdLimiteDiario(tipo, parseInt(qtd))
                 if(!alterou) return await client.reply(chatId, msgs_texto.admin.mudarlimite.tipo_invalido,id)
                 await client.reply(chatId, criarTexto(msgs_texto.admin.mudarlimite.sucesso, tipo.toUpperCase(), qtd == -1 ? "∞" : qtd), id)
-                break
+                break}
 
-            case "!usuarios":
+            case "!usuarios":{
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command), id)
-                var tipo = args[1].toLowerCase()
-                var usuarios = await db.obterUsuariosTipo(tipo)
+                let tipo = args[1].toLowerCase()
+                let usuarios = await db.obterUsuariosTipo(tipo)
                 if(usuarios.length == 0) return await client.reply(chatId, msgs_texto.admin.usuarios.nao_encontrado, id)
-                var respostaItens = ''
-                for (var usuario of usuarios) respostaItens += criarTexto(msgs_texto.admin.usuarios.resposta_item, usuario.nome, usuario.id_usuario.replace("@c.us", ""), usuario.comandos_total)
-                var resposta = criarTexto(msgs_texto.admin.usuarios.resposta_titulo, tipo.toUpperCase(), usuarios.length, respostaItens)
+                let respostaItens = ''
+                for (let usuario of usuarios) respostaItens += criarTexto(msgs_texto.admin.usuarios.resposta_item, usuario.nome, usuario.id_usuario.replace("@c.us", ""), usuario.comandos_total)
+                let resposta = criarTexto(msgs_texto.admin.usuarios.resposta_titulo, tipo.toUpperCase(), usuarios.length, respostaItens)
                 await client.sendTextWithMentions(chatId, resposta)
-                break
+                break}
 
-            case "!limpartipo":
+            case "!limpartipo":{
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command), id)
-                var tipo = args[1].toLowerCase()
-                var limpou = await db.limparTipo(tipo)
+                let tipo = args[1].toLowerCase()
+                let limpou = await db.limparTipo(tipo)
                 if(!limpou) return await client.reply(chatId, msgs_texto.admin.limpartipo.erro, id)
                 await client.reply(chatId, criarTexto(msgs_texto.admin.limpartipo.sucesso, tipo.toUpperCase()), id)
-                break
+                break}
 
-            case "!alterartipo":
+            case "!alterartipo":{
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command), id)
-                var usuario_tipo = ""
+                let usuario_tipo = ""
                 if(quotedMsg) usuario_tipo = quotedMsgObj.author
                 else if(mentionedJidList.length === 1) usuario_tipo = mentionedJidList[0]
                 else if(args.length > 2) usuario_tipo = args.slice(2).join("").replace(/\W+/g,"")+"@c.us"
@@ -312,27 +310,27 @@ module.exports = admin = async(client,message) => {
                 if(ownerNumber == usuario_tipo.replace("@c.us","")) return await client.reply(chatId, msgs_texto.admin.alterartipo.tipo_dono,id)
                 let c_registrado = await db.verificarRegistro(usuario_tipo)
                 if(c_registrado){
-                    var alterou = await db.alterarTipoUsuario(usuario_tipo, args[1])
+                    let alterou = await db.alterarTipoUsuario(usuario_tipo, args[1])
                     if(!alterou) return await client.reply(msgs_texto.admin.alterartipo.tipo_invalido, id)
                     await client.reply(chatId, criarTexto(msgs_texto.admin.alterartipo.sucesso, args[1].toUpperCase()),id)
                 } else {
                     await client.reply(chatId, msgs_texto.admin.alterartipo.nao_registrado,id)
                 }
-                break
+                break}
 
-            case "!tipos":
-                var tipos = botInfo().limite_diario.limite_tipos, respostaTipos = ''
-                for (var tipo in tipos) respostaTipos += criarTexto(msgs_texto.admin.tipos.item_tipo, msgs_texto.tipos[tipo], tipos[tipo] || "∞")
+            case "!tipos":{
+                let tipos = botInfo().limite_diario.limite_tipos, respostaTipos = ''
+                for (let tipo in tipos) respostaTipos += criarTexto(msgs_texto.admin.tipos.item_tipo, msgs_texto.tipos[tipo], tipos[tipo] || "∞")
                 await client.reply(chatId, criarTexto(msgs_texto.admin.tipos.resposta, respostaTipos), id)
-                break
+                break}
 
-            case "!rtodos":
+            case "!rtodos":{
                 if(!botInfo().limite_diario.status) return await client.reply(chatId, msgs_texto.admin.rtodos.erro_limite_diario,id)
                 await db.resetarComandosDia()
                 await client.reply(chatId, msgs_texto.admin.rtodos.sucesso,id)
-                break
+                break}
 
-            case "!r":
+            case "!r":{
                 if(!botInfo().limite_diario.status) return await client.reply(chatId, msgs_texto.admin.r.erro_limite_diario,id)
                 if(quotedMsg){
                     let r_registrado = await db.verificarRegistro(quotedMsgObj.author)
@@ -366,53 +364,53 @@ module.exports = admin = async(client,message) => {
                 } else {
                     return await client.reply(chatId, erroComandoMsg(command),id)
                 }
-                break
+                break}
 
-            case "!verdados":
-                var idUsuario = "", dadosUsuario = {}
+            case "!verdados":{
+                let idUsuario = "", dadosUsuario = {}
                 if(quotedMsg) idUsuario = quotedMsgObj.author
                 else if(mentionedJidList.length === 1) idUsuario = mentionedJidList[0]
                 else if(args.length >= 1) idUsuario =  args.slice(1).join("").replace(/\W+/g,"")+"@c.us"
                 else return await client.reply(chatId, erroComandoMsg(command),id)
-                var usuarioRegistrado = await db.verificarRegistro(idUsuario)
+                let usuarioRegistrado = await db.verificarRegistro(idUsuario)
                 if(usuarioRegistrado) dadosUsuario = await db.obterUsuario(idUsuario)
                 else return await client.reply(chatId,msgs_texto.admin.verdados.nao_registrado,id)
-                var maxComandosDia = dadosUsuario.max_comandos_dia || "Sem limite"
-                var tipoUsuario = msgs_texto.tipos[dadosUsuario.tipo]
-                var nomeUsuario =  dadosUsuario.nome || "Ainda não obtido"
-                var resposta = criarTexto(msgs_texto.admin.verdados.resposta_superior, nomeUsuario, tipoUsuario, dadosUsuario.id_usuario.replace("@c.us",""))
+                let maxComandosDia = dadosUsuario.max_comandos_dia || "Sem limite"
+                let tipoUsuario = msgs_texto.tipos[dadosUsuario.tipo]
+                let nomeUsuario =  dadosUsuario.nome || "Ainda não obtido"
+                let resposta = criarTexto(msgs_texto.admin.verdados.resposta_superior, nomeUsuario, tipoUsuario, dadosUsuario.id_usuario.replace("@c.us",""))
                 if(botInfo().limite_diario.status) resposta += criarTexto(msgs_texto.admin.verdados.resposta_variavel.limite_diario.on, dadosUsuario.comandos_dia, maxComandosDia, maxComandosDia)
                 resposta += criarTexto(msgs_texto.admin.verdados.resposta_inferior, dadosUsuario.comandos_total)
                 await client.reply(chatId, resposta, id)
                 break
-
-            case '!bctodos':
+}
+            case '!bctodos':{
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command), id)
-                var mensagem = body.slice(9).trim(), chats = await client.getAllChats(), bloqueados = await client.getBlockedIds()
+                let mensagem = body.slice(9).trim(), chats = await client.getAllChats(), bloqueados = await client.getBlockedIds()
                 await client.reply(chatId, criarTexto(msgs_texto.admin.bctodos.espera, chats.length, chats.length), id)
                 for (let chat of chats) {
-                    if(chat.isGroup && !chat.isReadOnly && !chat.isAnnounceGrpRestrict){
-                        await new Promise((resolve)=>{
-                            setTimeout(async ()=>{
-                                resolve(await client.sendText(chat.id, criarTexto(msgs_texto.admin.bctodos.anuncio, mensagem)))
-                            }, 1000)
-                        })
-                    } else {
-                        if(!bloqueados.includes(chat.id)) {
-                            await new Promise((resolve)=>{
-                                setTimeout(async ()=>{
-                                    resolve(await client.sendText(chat.id, criarTexto(msgs_texto.admin.bctodos.anuncio, mensagem)))
-                                }, 1000)
-                            })
+                    if (chat.isGroup && !chat.isReadOnly && !chat.isAnnounceGrpRestrict) {
+                        await new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve(client.sendText(chat.id, criarTexto(msgs_texto.admin.bctodos.anuncio, mensagem)));
+                            }, 1000);
+                        });
+                    } else if (!bloqueados.includes(chat.id)) {
+                            await new Promise((resolve) => {
+                                setTimeout(() => {
+                                    resolve(client.sendText(chat.id, criarTexto(msgs_texto.admin.bctodos.anuncio, mensagem)));
+                                }, 1000);
+                            });
+                        } else {
+                            resolve(); // Added resolve() to fix the issue
                         }
-                    }
                 }
                 await client.reply(chatId, msgs_texto.admin.bctodos.bc_sucesso , id)
-                break
+                break}
 
-            case '!bccontatos':
+            case '!bccontatos':{
                 if(args.length === 1) return client.reply(chatId, erroComandoMsg(command), id)
-                var mensagem = body.slice(12).trim(), chats = await client.getAllChats(), grupos = await client.getAllGroups(), bloqueados = await client.getBlockedIds(), qtdChatContatos = chats.length - grupos.length
+                let mensagem = body.slice(12).trim(), chats = await client.getAllChats(), grupos = await client.getAllGroups(), bloqueados = await client.getBlockedIds(), qtdChatContatos = chats.length - grupos.length
                 await client.reply(chatId, criarTexto(msgs_texto.admin.bccontatos.espera, qtdChatContatos, qtdChatContatos), id)
                 for (let chat of chats) {
                     if(!chat.isGroup && !bloqueados.includes(chat.id)) {
@@ -424,13 +422,13 @@ module.exports = admin = async(client,message) => {
                     }
                 }
                 await client.reply(chatId, msgs_texto.admin.bccontatos.bc_sucesso , id)
-                break
+                break}
 
-            case '!bcgrupos':
+            case '!bcgrupos':{
                 if(args.length === 1) return client.reply(chatId, erroComandoMsg(command), id)
-                var mensagem = body.slice(10).trim(), grupos = await client.getAllGroups()
+                let mensagem = body.slice(10).trim(), grupos = await client.getAllGroups()
                 await client.reply(chatId, criarTexto(msgs_texto.admin.bcgrupos.espera, grupos.length, grupos.length) , id)
-                for (var grupo of grupos) {
+                for (let grupo of grupos) {
                     if (!grupo.isReadOnly && !grupo.isAnnounceGrpRestrict) {
                         await new Promise((resolve)=>{
                             setTimeout(async ()=>{
@@ -440,26 +438,43 @@ module.exports = admin = async(client,message) => {
                     }
                 }
                 await client.reply(chatId, msgs_texto.admin.bcgrupos.bc_sucesso , id)
-                break
+                break}
 
-            case "!grupos":
-                var grupos = await client.getAllGroups(), resposta = criarTexto(msgs_texto.admin.grupos.resposta_titulo, grupos.length)
-                for (var grupo of grupos){
-                    var adminsGrupo = await client.getGroupAdmins(grupo.id)
-                    var botAdmin = adminsGrupo.includes(botNumber + '@c.us')
-                    var linkGrupo = "Não Disponível"
+            case "!grupos":{
+                let grupos = await client.getAllGroups(), resposta = criarTexto(msgs_texto.admin.grupos.resposta_titulo, grupos.length)
+                for (let grupo of grupos){
+                    let adminsGrupo = await client.getGroupAdmins(grupo.id)
+                    let botAdmin = adminsGrupo.includes(botNumber + '@c.us')
+                    let linkGrupo = "Não Disponível"
                     if(botAdmin) linkGrupo = await client.getGroupInviteLink(grupo.id)
                     resposta += criarTexto(msgs_texto.admin.grupos.resposta_itens, grupo.formattedTitle, grupo.groupMetadata.participants.length, botAdmin ? "Sim" : "Não", linkGrupo)
                 }
                 await client.reply(chatId, resposta, id)
-                break
+                break}
 
-            case '!print':
+            case "!gruposcadastrados":{
+                let grupos = await db.obterTodosGrupos(), resposta = criarTexto(msgs_texto.admin.grupos.resposta_titulo, grupos.length)
+                let todosGrupos = await client.getAllGroups()
+                for (let grupo of grupos){
+                    let grupoExiste = todosGrupos.find(g => g.id == grupo.id_grupo)
+                    if (grupoExiste){
+                        let adminsGrupo = await client.getGroupAdmins(grupoExiste.id_grupo)
+                        let botAdmin = adminsGrupo.includes(botNumber + '@c.us')
+                        let linkGrupo = "Não Disponível"
+                        if(botAdmin) linkGrupo = await client.getGroupInviteLink(grupoExiste.id_grupo)
+                        resposta += criarTexto(msgs_texto.admin.grupos.resposta_itens, grupoExiste.formattedTitle, grupoExiste.groupMetadata.participants.length, botAdmin ? "Sim" : "Não", linkGrupo)
+                    }
+                }
+                await client.reply(chatId, resposta, id)
+                break
+            }
+
+            case '!print':{
                 let print = await client.getSnapshot()
                 await client.sendFile(chatId,print,"print.png",'Captura de Tela',id)
-                break
+                break}
 
-            case '!estado':
+            case '!estado':{
                 if(args.length != 2)  return client.reply(chatId,erroComandoMsg(command),id)
                 switch(args[1]){
                     case 'online':
@@ -477,15 +492,18 @@ module.exports = admin = async(client,message) => {
                     default:
                         await client.reply(chatId, erroComandoMsg(command), id)
                 }
-                break
+                break}
 
-            case '!desligar':
+            case '!desligar':{
                 await client.reply(chatId, msgs_texto.admin.desligar.sucesso, id)
                 await client.kill()
-                break
+                break}
         }
     } catch(err){
+        console.log(err)
         throw err
     }
 
 }
+
+module.exports = admin
