@@ -54,8 +54,8 @@ module.exports = grupo = async(client,message) => {
                     return client.reply(chatId, erroComandoMsg(command) , id)
                 }
                 break
-                
-            
+
+
             case '!status':
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 var grupoInfo = await db.obterGrupo(groupId)
@@ -81,7 +81,7 @@ module.exports = grupo = async(client,message) => {
                 resposta += (grupoInfo.antifake.status) ? criarTexto(msgs_texto.grupo.status.resposta_variavel.antifake.on, grupoInfo.antifake.ddi_liberados.toString()) : msgs_texto.grupo.status.resposta_variavel.antifake.off
                 //Anti-flood
                 let infoAntiFlood = db.grupoInfoAntiFlood(groupId)
-                resposta += (grupoInfo.antiflood) ? criarTexto(msgs_texto.grupo.status.resposta_variavel.antiflood.on, infoAntiFlood.max, infoAntiFlood.intervalo) : msgs_texto.grupo.status.resposta_variavel.antiflood.off 
+                resposta += (grupoInfo.antiflood) ? criarTexto(msgs_texto.grupo.status.resposta_variavel.antiflood.on, infoAntiFlood.max, infoAntiFlood.intervalo) : msgs_texto.grupo.status.resposta_variavel.antiflood.off
                 //Contador
                 resposta += (grupoInfo.contador.status) ? criarTexto(msgs_texto.grupo.status.resposta_variavel.contador.on, grupoInfo.contador.inicio) : msgs_texto.grupo.status.resposta_variavel.contador.off
                 //Bloqueio de CMDS
@@ -122,7 +122,7 @@ module.exports = grupo = async(client,message) => {
                 await db.adicionarListaNegra(groupId,blista_id_usuario)
                 client.reply(chatId, msgs_texto.grupo.blista.sucesso, id)
                 break
-            
+
             case "!dlista":
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if (!isBotGroupAdmins) return client.reply(chatId,msgs_texto.permissao.bot_admin, id)
@@ -134,7 +134,7 @@ module.exports = grupo = async(client,message) => {
                 await db.removerListaNegra(groupId,dlista_id_usuario)
                 client.reply(chatId, msgs_texto.grupo.dlista.sucesso, id)
                 break
-            
+
             case "!listanegra":
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if (!isBotGroupAdmins) return client.reply(chatId,msgs_texto.permissao.bot_admin, id)
@@ -174,12 +174,12 @@ module.exports = grupo = async(client,message) => {
                     await client.reply(chatId, msgs_texto.grupo.autosticker.desligado, id)
                 }
                 break
-                    
+
             case '!rlink':
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if (!isBotGroupAdmins) return client.reply(chatId,msgs_texto.permissao.bot_admin, id)
                 client.revokeGroupInviteLink(groupId).then(()=>{client.reply(chatId, msgs_texto.grupo.rlink.sucesso ,id)}).catch(()=>{client.reply(chatId, msgs_texto.grupo.rlink.erro ,id)})
-                break        
+                break
 
             case '!afake':
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
@@ -193,7 +193,7 @@ module.exports = grupo = async(client,message) => {
                 } else {
                     await db.alterarAntiFake(groupId, false)
                     client.reply(chatId,  msgs_texto.grupo.antifake.desligado, id)
-                } 
+                }
                 break
 
             case "!mutar":
@@ -254,7 +254,7 @@ module.exports = grupo = async(client,message) => {
                     await db.alterarContador(groupId, false)
                     await db.removerContagemGrupo(groupId)
                     client.reply(chatId,msgs_texto.grupo.contador.desligado, id)
-                } 
+                }
                 break
 
             case "!atividade":
@@ -276,7 +276,7 @@ module.exports = grupo = async(client,message) => {
                 var atividadeResposta = criarTexto(msgs_texto.grupo.atividade.resposta, atividadeUsuario.msg, atividadeUsuario.texto, atividadeUsuario.imagem, atividadeUsuario.video, atividadeUsuario.sticker, atividadeUsuario.gravacao, atividadeUsuario.audio, atividadeUsuario.outro)
                 client.reply(chatId, atividadeResposta, id)
                 break
-            
+
             case "!alterarcont":
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if(args.length == 1)  return client.reply(chatId, erroComandoMsg(command), id)
@@ -287,7 +287,7 @@ module.exports = grupo = async(client,message) => {
                 if(!quotedMsg && mentionedJidList.length != 1) return client.reply(chatId, erroComandoMsg(command), id)
                 var usuarioSelecionado = quotedMsg ? quotedMsgObj.author : mentionedJidList[0]
                 var contagemUsuario = await db.obterAtividade(groupId, usuarioSelecionado)
-                if(!contagemUsuario) return client.reply(chatId, msgs_texto.grupo.alterarcont.fora_grupo,id) 
+                if(!contagemUsuario) return client.reply(chatId, msgs_texto.grupo.alterarcont.fora_grupo,id)
                 await db.alterarContagemUsuario(groupId, usuarioSelecionado, usuarioNumeroMsg)
                 await client.reply(chatId, msgs_texto.grupo.alterarcont.sucesso, id)
                 break
@@ -314,7 +314,7 @@ module.exports = grupo = async(client,message) => {
                     client.reply(chatId,msgs_texto.grupo.minativos.sem_inativo,id)
                 }
                 break
-                
+
             case "!ibanir":
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if(args.length == 1) return client.reply(chatId, erroComandoMsg(command), id)
@@ -359,12 +359,12 @@ module.exports = grupo = async(client,message) => {
                         default:
                             medalha = ''
                     }
-                    respostaTop += criarTexto(msgs_texto.grupo.topativos.resposta_itens, medalha, i+1, usuariosAtivos[i].id_usuario.replace(/@c.us/g, ''), usuariosAtivos[i].msg)   
+                    respostaTop += criarTexto(msgs_texto.grupo.topativos.resposta_itens, medalha, i+1, usuariosAtivos[i].id_usuario.replace(/@c.us/g, ''), usuariosAtivos[i].msg)
                 }
                 respostaTop += `╠\n╚═〘 ${process.env.NOME_BOT.trim()}® 〙`
                 await client.sendTextWithMentions(chatId, respostaTop)
                 break
-            
+
             case "!enquete":
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 var grupoInfo = await db.obterGrupo(groupId)
@@ -387,7 +387,7 @@ module.exports = grupo = async(client,message) => {
                     })
                 }
                 break
-            
+
             case '!votarenquete':
                 var grupoInfo = await db.obterGrupo(groupId)
                 if(!grupoInfo.enquete.status) return client.reply(chatId, msgs_texto.grupo.votarenquete.sem_enquete , id)
@@ -400,7 +400,7 @@ module.exports = grupo = async(client,message) => {
                     await client.reply(chatId,msgs_texto.grupo.votarenquete.sucesso,id)
                 })
                 break
-            
+
             case '!verenquete':
                 var grupoInfo = await db.obterGrupo(groupId)
                 if(!grupoInfo.enquete.status) return client.reply(chatId, msgs_texto.grupo.verenquete.sem_enquete , id)
@@ -411,7 +411,7 @@ module.exports = grupo = async(client,message) => {
                 enqueteResposta += msgs_texto.grupo.verenquete.resposta_inferior
                 await client.reply(chatId, enqueteResposta, id)
                 break
-            
+
             case '!aflood':
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if (!isBotGroupAdmins) return client.reply(chatId,msgs_texto.permissao.bot_admin, id)
@@ -443,7 +443,7 @@ module.exports = grupo = async(client,message) => {
                     client.reply(chatId,  msgs_texto.grupo.antiflood.desligado, id)
                 }
                 break
-            
+
             case "!votacao":
                 var grupoInfo = await db.obterGrupo(groupId)
                 if(!grupoInfo.voteban.status) {
@@ -452,7 +452,7 @@ module.exports = grupo = async(client,message) => {
                     client.sendTextWithMentions(chatId, criarTexto(msgs_texto.grupo.voteban.votacao_resposta, grupoInfo.voteban.usuario))
                 }
                 break
-            
+
             case '!votar':
                 var grupoInfo = await db.obterGrupo(groupId)
                 if(!grupoInfo.voteban.status) return client.reply(chatId, msgs_texto.grupo.voteban.sem_votacao , id)
@@ -499,7 +499,7 @@ module.exports = grupo = async(client,message) => {
                 var usuarioComandos = body.slice(6).split(" "), respostaBloqueio = await bloquearComandosGrupo(usuarioComandos, groupId)
                 await client.reply(chatId, respostaBloqueio, id)
                 break
-            
+
             case "!dcmd":
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin , id)
                 if(args.length === 1) return client.reply(chatId, erroComandoMsg(command),id)
@@ -540,7 +540,7 @@ module.exports = grupo = async(client,message) => {
                 respostaMarcar += `╚═〘 ${process.env.NOME_BOT.trim()}®〙`
                 await client.sendTextWithMentions(chatId, respostaMarcar)
                 break
-                
+
             case '!mm':
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin, id)
                 var membrosGrupo = await client.getGroupMembers(groupId), membrosMarcados = []
@@ -555,19 +555,19 @@ module.exports = grupo = async(client,message) => {
                 respostaMarcar += `╚═〘 ${process.env.NOME_BOT.trim()}®〙`
                 if(membrosMarcados.length == 0) return client.reply(chatId, msgs_texto.grupo.mm.sem_membros, id)
                 await client.sendTextWithMentions(chatId, respostaMarcar)
-                break  
+                break
 
             case '!bantodos':
                 var donoGrupo = sender.id === chat.groupMetadata.owner
-                if (!donoGrupo) return client.reply(chatId, msgs_texto.permissao.apenas_dono_grupo, id)           
+                if (!donoGrupo) return client.reply(chatId, msgs_texto.permissao.apenas_dono_grupo, id)
                 if (!isBotGroupAdmins) return client.reply(chatId, msgs_texto.permissao.bot_admin, id)
                 var membrosGrupo = await client.getGroupMembers(groupId)
                 for(let membro of membrosGrupo){
                     if (!groupAdmins.includes(membro.id)) await client.removeParticipant(groupId, membro.id)
                 }
                 client.reply(chatId, msgs_texto.grupo.banirtodos.banir_sucesso, id)
-                break  
-            
+                break
+
             case '!add':
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin, id)
                 if (!isBotGroupAdmins) return client.reply(chatId, msgs_texto.permissao.bot_admin, id)
@@ -622,7 +622,7 @@ module.exports = grupo = async(client,message) => {
                     } else {
                         if(usuariosSelecionados.length === 1) client.reply(chatId,  msgs_texto.grupo.banir.banir_erro, id)
                     }
-                }     
+                }
                 break
 
             case '!promover':
@@ -679,10 +679,10 @@ module.exports = grupo = async(client,message) => {
                 if (!isGroupAdmins) return client.reply(chatId, msgs_texto.permissao.apenas_admin, id)
                 var estadoNovo = !chat.groupMetadata.announce
                 client.setGroupToAdminsOnly(groupId, estadoNovo)
-                break 
+                break
         }
     } catch(err){
         throw err
     }
-    
+
 }

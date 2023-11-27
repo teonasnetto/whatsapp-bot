@@ -28,7 +28,7 @@ module.exports = diversao = async(client,message) => {
                 await client.sendFile(chatId, './media/img/comandos/detector/calibrando.png', 'detector.png', msgs_texto.diversao.detector.espera, id)
                 await client.sendFile(chatId, `./media/img/comandos/detector/${imgsDetector[indexAleatorio]}.png`, 'detector.png', "", quotedMsgObj.id)
                 break
-            
+
             case '!viadometro' :
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
                 if(!quotedMsg && mentionedJidList.length == 0) return await client.reply(chatId, erroComandoMsg(command), id)
@@ -41,7 +41,7 @@ module.exports = diversao = async(client,message) => {
                 var respostaTexto = criarTexto(msgs_texto.diversao.viadometro.resposta,respostas[indexAleatorio])
                 await client.reply(chatId, respostaTexto, idResposta)
                 break
-            
+
             case '!bafometro' :
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
                 if(!quotedMsg && mentionedJidList.length == 0) return await client.reply(chatId, erroComandoMsg(command), id)
@@ -104,7 +104,7 @@ module.exports = diversao = async(client,message) => {
             case '!mascote':
                 var mascoteFotoURL = "https://i.imgur.com/mVwa7q4.png"
                 await client.sendFileFromUrl(chatId, mascoteFotoURL, 'mascote.jpeg', 'Whatsapp Jr.', id)
-                break 
+                break
 
             case '!malacos':
                 const malacosFotoURL = "https://i.imgur.com/7bcn2TK.jpg"
@@ -125,7 +125,7 @@ module.exports = diversao = async(client,message) => {
                 await client.sendTextWithMentions(chatId, respostaTexto)
                 await client.removeParticipant(groupId, idParticipantesAtuais[indexAleatorio])
                 break
-            
+
             case '!casal':
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
                 var idParticipantesAtuais = await client.getGroupMembersId(groupId)
@@ -143,13 +143,13 @@ module.exports = diversao = async(client,message) => {
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
                 if(!quotedMsg && mentionedJidList.length === 0) return await client.reply(chatId, erroComandoMsg(command) , id)
                 if(mentionedJidList.length > 1) return await client.reply(chatId, msgs_texto.diversao.gadometro.apenas_um , id)
-                var respostas = msgs_texto.diversao.gadometro.respostas 
+                var respostas = msgs_texto.diversao.gadometro.respostas
                 var indexAleatorio = Math.floor(Math.random() * respostas.length), idResposta = null, alvo = null
                 if (mentionedJidList.length == 1) idResposta = id, alvo = mentionedJidList[0].replace(/@c.us/g, '')
                 else idResposta = quotedMsgObj.id, alvo = quotedMsgObj.author.replace(/@c.us/g, '')
                 if(ownerNumber == alvo) indexAleatorio = 0
                 var respostaTexto = criarTexto(msgs_texto.diversao.gadometro.resposta, respostas[indexAleatorio])
-                await client.reply(chatId, respostaTexto, idResposta)       
+                await client.reply(chatId, respostaTexto, idResposta)
                 break
 
             case '!top5':
@@ -176,7 +176,7 @@ module.exports = diversao = async(client,message) => {
                     var indexAleatorio = Math.floor(Math.random() * idParticipantesAtuais.length)
                     var membroSelecionado = idParticipantesAtuais[indexAleatorio]
                     respostaTexto += criarTexto(msgs_texto.diversao.top5.resposta_itens, medalha, i+1, membroSelecionado.replace(/@c.us/g, ''))
-                    idParticipantesAtuais.splice(idParticipantesAtuais.indexOf(membroSelecionado),1)                
+                    idParticipantesAtuais.splice(idParticipantesAtuais.indexOf(membroSelecionado),1)
                 }
                 await client.sendTextWithMentions(chatId, respostaTexto)
                 break
@@ -197,10 +197,10 @@ module.exports = diversao = async(client,message) => {
                 } catch(err){
                     await client.reply(chatId, err.message, id)
                 }
-                break    
+                break
         }
     } catch(err){
         throw err
     }
-    
+
 }

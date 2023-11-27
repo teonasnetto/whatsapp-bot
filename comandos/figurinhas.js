@@ -13,15 +13,15 @@ module.exports = figurinhas = async(client,message) => {
         const args =  commands.split(' ')
         const uaOverride = 'WhatsApp/2.2029.4 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
 
-        switch(command){      
-            case '!s': 
+        switch(command){
+            case '!s':
                 if(isMedia || quotedMsg){
                     var argSticker = args.length > 1 ? args[1].toLowerCase() : ""
                     var stickerMetadata = {
-                        author: process.env.NOME_AUTOR_FIGURINHAS.trim(), 
-                        pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Stickers`, 
-                        keepScale: true, 
-                        circle: false, 
+                        author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
+                        pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Stickers`,
+                        keepScale: true,
+                        circle: false,
                         discord: "701084178112053288"
                     }
 
@@ -49,7 +49,7 @@ module.exports = figurinhas = async(client,message) => {
                     return client.reply(chatId, erroComandoMsg(command) , id)
                 }
                 break
-            
+
             case '!simg':
                 if(quotedMsg && quotedMsg.type == "sticker"){
                     var mediaData = await decryptMedia(quotedMsg, uaOverride)
@@ -64,9 +64,9 @@ module.exports = figurinhas = async(client,message) => {
                 if(isMedia || quotedMsg){
                     var argSticker = args.length > 1 ? args[1].toLowerCase() : ""
                     var stickerMetadata = {
-                        author: process.env.NOME_AUTOR_FIGURINHAS.trim(), 
-                        pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Animado`, 
-                        keepScale: false, 
+                        author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
+                        pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Animado`,
+                        keepScale: false,
                         discord: "701084178112053288"
                     }
                     var configConversao = {
@@ -108,9 +108,9 @@ module.exports = figurinhas = async(client,message) => {
             case "!tps":
                 if(args.length == 1 || type != "chat") return client.reply(chatId, erroComandoMsg(command), id)
                 var stickerMetadata = {
-                    author: process.env.NOME_AUTOR_FIGURINHAS.trim(), 
-                    pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Textos`, 
-                    keepScale: true, 
+                    author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
+                    pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Textos`,
+                    keepScale: true,
                     discord: "701084178112053288"
                 }
                 var usuarioTexto = body.slice(5).trim()
@@ -139,13 +139,13 @@ module.exports = figurinhas = async(client,message) => {
                     await client.reply(chatId, err.message, id)
                 }
                 break
-            
+
             case '!ssf':
                 if(isMedia || quotedMsg){
                     var stickerMetadata = {
-                        author: process.env.NOME_AUTOR_FIGURINHAS.trim(), 
-                        pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Sem Fundo`, 
-                        keepScale: true, 
+                        author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
+                        pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Sem Fundo`,
+                        keepScale: true,
                         discord: "701084178112053288"
                     }
                     var dadosMensagem = {
@@ -175,6 +175,6 @@ module.exports = figurinhas = async(client,message) => {
     } catch(err){
         throw err
     }
-    
+
 
 }

@@ -12,7 +12,7 @@ module.exports = downloads = async(client,message) => {
         command = removerNegritoComando(command)
         const args =  commands.split(' ')
 
-        switch(command){      
+        switch(command){
             case "!play":
                 if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
                 try{
@@ -27,13 +27,13 @@ module.exports = downloads = async(client,message) => {
                     }).catch(()=>{
                         fs.unlinkSync(saidaAudio)
                         client.reply(chatId, msgs_texto.downloads.play.erro_download, id)
-                    })      
+                    })
                 } catch(err){
                     console.log(err)
                     return await client.reply(chatId,err.message,id)
                 }
                 break
-            
+
             case "!yt":
                 if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
                 try{
@@ -63,7 +63,7 @@ module.exports = downloads = async(client,message) => {
                     })
                 } catch(err){
                     client.reply(chatId,err.message,id)
-                } 
+                }
                 break
 
             case "!ig":
@@ -81,7 +81,7 @@ module.exports = downloads = async(client,message) => {
                         var temErro = false
                         for(let url of resultadosMidia.url_list) await client.sendFile(chatId, url, `ig-media`,"").catch(()=> temErro = true)
                         if(temErro) await client.reply(chatId, msgs_texto.downloads.ig.erro_download, id)
-                    } 
+                    }
                 } catch(err){
                     await client.reply(chatId,err.message,id)
                 }
@@ -97,7 +97,7 @@ module.exports = downloads = async(client,message) => {
                         await client.sendFileFromUrl(chatId, resultadosMidia.download[0].url, `twittervid.mp4`,"", id).catch(()=>{
                             client.reply(chatId, msgs_texto.downloads.tw.erro_download, id)
                         })
-                    } 
+                    }
                     else{
                         await client.sendFile(chatId, resultadosMidia.download, `twitterimg.jpg`,"", id).catch(()=>{
                             client.reply(chatId, msgs_texto.downloads.tw.erro_download, id)
@@ -125,7 +125,7 @@ module.exports = downloads = async(client,message) => {
                     await client.reply(chatId, err.message, id)
                 }
                 break
-            
+
             case '!img':
                 if(quotedMsg || type != "chat") return await client.reply(chatId, erroComandoMsg(command) , id)
                 var usuarioQuantidadeFotos = args[1], qtdFotos = 1, textoPesquisa = ""
