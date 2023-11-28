@@ -1,0 +1,14 @@
+version: "3"
+
+networks:
+  node_app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.1.0/24
+
+  python_app_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.2.0/24

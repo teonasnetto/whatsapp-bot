@@ -1,0 +1,3 @@
+_IGNORE_session
+.node-persist
+node_modules
