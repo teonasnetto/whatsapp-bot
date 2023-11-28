@@ -1,0 +1,16 @@
+version: "3"
+services:
+  node_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      app_net:
+        ipv4_address: 172.18.0.3
+
+    container_name: node_app_container
+    restart: always
+
+networks:
+  app_net:
+    external: true
