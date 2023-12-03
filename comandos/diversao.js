@@ -198,6 +198,82 @@ module.exports = diversao = async(client,message) => {
                     await client.reply(chatId, err.message, id)
                 }
                 break
+
+            case "!roll":{
+                try{
+                    if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
+
+                    let dice = {
+                        "d4": 4,
+                        "d6": 6,
+                        "d8": 8,
+                        "d10": 10,
+                        "d12": 12,
+                        "d20": 20,
+                        "d100": 100
+                    }
+
+                    function rollDice(dices) {
+                        const diceRegex = /(\d*)\s*d(\d+)/g;
+
+                        let match;
+                        let totalSum = 0;
+                        let individualResults = [];
+
+                        while ((match = diceRegex.exec(dices)) !== null) {
+                            const quantity = match[1] === "" ? 1 : parseInt(match[1]);
+                            const selectedDice = "d" + match[2];
+
+                            if (!dice[selectedDice]) {
+                                throw new Error(`Dado inválido: ${selectedDice}`);
+                            }
+
+                            let sum = 0;
+                            let results = [];
+
+                            for (let i = 0; i < quantity; i++) {
+                                const result = Math.floor(Math.random() * dice[selectedDice]) + 1;
+                                sum += result;
+                                results.push(result);
+                            }
+
+                            totalSum += sum;
+                            individualResults.push({ dice: selectedDice, quantity, results, sum });
+                        }
+
+                        // Adiciona um valor fixo para os casos em que não há especificação de dado
+                        const fixedValue = parseInt(dices.split('+').filter(part => !part.includes('d')).join('').trim()) || 0;
+                        totalSum += fixedValue;
+
+                        return { totalSum, individualResults, fixedValue };
+                    }
+
+                    function formatResults(results) {
+                        return results.map(result => {
+                            return {
+                                dice: result.dice,
+                                quantity: result.quantity,
+                                individualResults: result.results,
+                                sum: result.sum
+                            };
+                        });
+                    }
+
+                    var usuarioTexto = body.trim()
+
+                    const { totalSum, individualResults, fixedValue } = rollDice(usuarioTexto);
+                    const formattedResults = formatResults(individualResults);
+
+                    // Consolidar todos os resultados, fixedValue e totalSum em uma única string
+                    let resultString = formattedResults.map(result => `${result.quantity} ${result.dice}: ${result.individualResults.join(', ')} = ${result.sum}`).join('\n');
+                    resultString += `\nBonus: ${fixedValue}\nTotal: ${totalSum}`;
+
+                    await client.reply(chatId, resultString, id)
+                }
+                catch(err){
+                    await client.reply(chatId, err.message, id)
+                }
+            }
         }
     } catch(err){
         throw err

@@ -101,7 +101,8 @@
         "!par",
         "!malacos",
         "!chance",
-        "!fch"
+        "!fch",
+        "!roll"
     ],
     "admin":[
         "!sair",
