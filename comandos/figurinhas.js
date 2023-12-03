@@ -57,15 +57,16 @@ module.exports = figurinhas = async(client,message) => {
                             mimetype : (isMedia)? mimetype : quotedMsg.mimetype,
                             mensagem: (isMedia)? message : quotedMsg
                         }
-                        if(dadosMensagem.tipo === "image"){
+                        if((dadosMensagem.mimetype === 'video/mp4' || dadosMensagem.mimetype === 'image/gif' || dadosMensagem.tipo === "image")){
                             var mediaData = await decryptMedia(dadosMensagem.mensagem, uaOverride)
-                            var imagemBase64 = `data:${dadosMensagem.mimetype};base64,${mediaData.toString('base64')}`
-                            client.sendFile(chatId,imagemBase64,"sticker.jpg","",quotedMsgObj.id)
-                            // client.sendImageAsSticker(chatId, imagemBase64, stickerMetadata).catch(err=>{
-                            //     consoleErro(err.message, "STICKER")
-                            //     client.reply(chatId, msgs_texto.figurinhas.sticker.erro_s,id)
-                            // })
-                        } else {
+                            var base64 = `data:${dadosMensagem.mimetype};base64,${mediaData.toString('base64')}`
+                            client.sendFile(chatId,base64,"arquivo","",quotedMsgObj.id)
+                            .catch((err)=>{
+                                consoleErro(err.message, "Media-save")
+                                client.reply(chatId, msgs_texto.figurinhas.sticker.error_media_video , id)
+                            })
+                        }
+                         else {
                             return client.reply(chatId, erroComandoMsg(command) , id)
                         }
                     } else {
@@ -95,7 +96,7 @@ module.exports = figurinhas = async(client,message) => {
                     var configConversao = {
                         endTime: "00:00:11.0",
                         crop: true,
-                        fps:9,
+                        fps:24,
                         square:240
                     }
 
