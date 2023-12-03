@@ -1,5 +1,5 @@
 {
-  "name": "lbot-whatsapp",
+  "name": "teobot-whatsapp",
   "version": "1.0.1",
   "description": "Bot brasileiro nota joia.",
   "main": "app",
@@ -11,7 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
-    "@open-wa/wa-automate": "^4.61.0",
+    "@open-wa/wa-automate": "^4.66.3",
     "@open-wa/wa-decrypt": "^3.0.1",
     "@vitalets/google-translate-api": "^7.0.0",
     "acrcloud": "^1.4.0",
