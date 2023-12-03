@@ -22,7 +22,7 @@ module.exports = figurinhas = async(client,message) => {
                         pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Stickers`,
                         keepScale: true,
                         circle: false,
-                        discord: "701084178112053288"
+                        discord: process.env.DISCORD.trim()
                     }
 
                     if(argSticker == "1"){
@@ -50,6 +50,29 @@ module.exports = figurinhas = async(client,message) => {
                 }
                 break
 
+                case '!save':
+                    if(isMedia || quotedMsg){
+                        var dadosMensagem = {
+                            tipo : (isMedia) ? type : quotedMsg.type,
+                            mimetype : (isMedia)? mimetype : quotedMsg.mimetype,
+                            mensagem: (isMedia)? message : quotedMsg
+                        }
+                        if(dadosMensagem.tipo === "image"){
+                            var mediaData = await decryptMedia(dadosMensagem.mensagem, uaOverride)
+                            var imagemBase64 = `data:${dadosMensagem.mimetype};base64,${mediaData.toString('base64')}`
+                            client.sendFile(chatId,imagemBase64,"sticker.jpg","",quotedMsgObj.id)
+                            // client.sendImageAsSticker(chatId, imagemBase64, stickerMetadata).catch(err=>{
+                            //     consoleErro(err.message, "STICKER")
+                            //     client.reply(chatId, msgs_texto.figurinhas.sticker.erro_s,id)
+                            // })
+                        } else {
+                            return client.reply(chatId, erroComandoMsg(command) , id)
+                        }
+                    } else {
+                        return client.reply(chatId, erroComandoMsg(command) , id)
+                    }
+                    break
+
             case '!simg':
                 if(quotedMsg && quotedMsg.type == "sticker"){
                     var mediaData = await decryptMedia(quotedMsg, uaOverride)
@@ -67,7 +90,7 @@ module.exports = figurinhas = async(client,message) => {
                         author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
                         pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Animado`,
                         keepScale: false,
-                        discord: "701084178112053288"
+                        discord: process.env.DISCORD.trim()
                     }
                     var configConversao = {
                         endTime: "00:00:11.0",
@@ -111,7 +134,7 @@ module.exports = figurinhas = async(client,message) => {
                     author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
                     pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Textos`,
                     keepScale: true,
-                    discord: "701084178112053288"
+                    discord: process.env.DISCORD.trim()
                 }
                 var usuarioTexto = body.slice(5).trim()
                 if(usuarioTexto.length > 40) return client.reply(chatId,msgs_texto.figurinhas.tps.texto_longo,id)
@@ -146,7 +169,7 @@ module.exports = figurinhas = async(client,message) => {
                         author: process.env.NOME_AUTOR_FIGURINHAS.trim(),
                         pack: `${process.env.NOME_AUTOR_FIGURINHAS.trim()} Sticker Sem Fundo`,
                         keepScale: true,
-                        discord: "701084178112053288"
+                        discord: process.env.DISCORD.trim()
                     }
                     var dadosMensagem = {
                         tipo: (isMedia)? type : quotedMsg.type,

@@ -30,7 +30,8 @@
         "!ssf",
         "!tps",
         "!atps",
-        "!simg"
+        "!simg",
+        "!save"
     ],
     "downloads": [
         "!play",
