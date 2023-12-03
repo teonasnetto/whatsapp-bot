@@ -274,6 +274,35 @@ module.exports = diversao = async(client,message) => {
                     await client.reply(chatId, err.message, id)
                 }
             }
+
+            case "!sort":
+
+                if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
+
+                try{
+
+                    const inputString = body.trim();
+
+                    const regex = /!sort\s+(-?\d+)\s+(-?\d+)/;
+                    const match = inputString.match(regex);
+
+                    if (match && match.length === 3) {
+                        const minValue = parseInt(match[1]);
+                        const maxValue = parseInt(match[2]);
+
+                        if (!isNaN(minValue) && !isNaN(maxValue)) {
+                            const randomNumber = Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue;
+                            await client.reply(chatId, `🍀 *Resultado foi:* *${randomNumber}*`, id)
+                        } else {
+                            throw new Error("Valores inválidos. Certifique-se de fornecer números válidos.");
+                        }
+                    } else {
+                        throw new Error("Formato inválido. Use !aleatorio <min> <max>.");
+                    }
+                }
+                catch(err){
+                    await client.reply(chatId, err.message, id)
+                }
         }
     } catch(err){
         throw err
