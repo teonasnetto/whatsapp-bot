@@ -55,14 +55,22 @@ module.exports = downloads = async(client,message) => {
                 if(args.length === 1) return await client.reply(chatId, erroComandoMsg(command), id)
                 try{
                     var usuarioURL = body.slice(4).trim(), resultadosMidia = await api.obterMidiaFacebook(usuarioURL)
-                    console.log(resultadosMidia)
-                    if(resultadosMidia.video_length > 120) return await client.reply(chatId, msgs_texto.downloads.fb.limite, id)
-                    await client.reply(chatId, criarTexto(msgs_texto.downloads.fb.espera, resultadosMidia.video_length+"s"), id)
-                    await client.sendFile(chatId, resultadosMidia.download[1].url, `fb-media.mp4`,"", id).catch(()=>{
-                        client.reply(chatId, msgs_texto.downloads.fb.erro_download, id)
-                    })
+                    if (resultadosMidia) {
+                        await client.sendFile(chatId, resultadosMidia, 'fb-media.mp4', "📷 Media do facebook", id)
+                        .then(()=>{
+                            fs.unlinkSync(resultadosMidia)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                            fs.unlinkSync(resultadosMidia)
+                            client.reply(chatId, msgs_texto.downloads.fb.erro_download, id)
+                        })
+                    } else {
+                        client.reply(chatId, msgs_texto.downloads.fb.erro_download, id);
+                    }
                 } catch(err){
                     client.reply(chatId,err.message,id)
+                    console.log(err)
                 }
                 break
 
