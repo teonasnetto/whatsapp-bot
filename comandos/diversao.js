@@ -190,15 +190,6 @@ module.exports = diversao = async(client,message) => {
                 await client.sendTextWithMentions(chatId, respostaTexto)
                 break
 
-            case "!fch":
-                try{
-                    var respostaFrase = await api.obterCartasContraHu()
-                    await client.reply(chatId, respostaFrase, id)
-                } catch(err){
-                    await client.reply(chatId, err.message, id)
-                }
-                break
-
             case "!roll":{
                 try{
                     if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
