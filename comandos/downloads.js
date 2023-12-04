@@ -88,17 +88,22 @@ module.exports = downloads = async(client,message) => {
 
             case "!tw":
                 if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
-                await client.reply(chatId,msgs_texto.downloads.tw.espera,id)
                 try{
                     var usuarioTexto = body.slice(4).trim(), resultadosMidia = await api.obterMidiaTwitter(usuarioTexto)
-                    if(!resultadosMidia.found) return await client.reply(chatId, msgs_texto.downloads.tw.nao_encontrado, id)
-                    if(resultadosMidia.type == "video/gif"){
-                        await client.sendFileFromUrl(chatId, resultadosMidia.download[0].url, `twittervid.mp4`,"", id).catch(()=>{
+                    if(!resultadosMidia.media[0].url) return await client.reply(chatId, msgs_texto.downloads.tw.nao_encontrado, id)
+                    if(resultadosMidia.type == "video"){
+                        await client.sendFile(chatId, resultadosMidia.media[0].url, 'tw-video.mp4', "📷 Media do Twitter", id)
+                        .then(()=>{
+                            fs.unlinkSync(resultadosMidia.url)
+                        })
+                        .catch((err)=>{
+                            console.log(err)
+                            fs.unlinkSync(resultadosMidia.url)
                             client.reply(chatId, msgs_texto.downloads.tw.erro_download, id)
                         })
                     }
                     else{
-                        await client.sendFile(chatId, resultadosMidia.download, `twitterimg.jpg`,"", id).catch(()=>{
+                        await client.sendFile(chatId, resultadosMidia.media[0].url, `twitterimg.jpg`,"📷 Media do Twitter", id).catch(()=>{
                             client.reply(chatId, msgs_texto.downloads.tw.erro_download, id)
                         })
                     }
