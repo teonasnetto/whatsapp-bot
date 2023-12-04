@@ -94,11 +94,11 @@ module.exports = downloads = async(client,message) => {
                     if(resultadosMidia.type == "video"){
                         await client.sendFile(chatId, resultadosMidia.media[0].url, 'tw-video.mp4', "📷 Media do Twitter", id)
                         .then(()=>{
-                            fs.unlinkSync(resultadosMidia.url)
+                            fs.unlinkSync(resultadosMidia.media[0].url)
                         })
                         .catch((err)=>{
                             console.log(err)
-                            fs.unlinkSync(resultadosMidia.url)
+                            fs.unlinkSync(resultadosMidia.media[0].url)
                             client.reply(chatId, msgs_texto.downloads.tw.erro_download, id)
                         })
                     }
