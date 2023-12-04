@@ -23,10 +23,10 @@ module.exports = diversao = async(client,message) => {
             case '!detector' :
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
                 if(!quotedMsg) return await client.reply(chatId, erroComandoMsg(command) , id)
-                var imgsDetector = ['verdade','vaipra','mentiroso','meengana','kao','incerteza','estresse','conversapraboi']
+                var imgsDetector = ['Verdade!', 'Caozada!', 'Mentiroso!', 'Você é desprovido de honestidade','Naldo, é vc?','Obviamente está certo!','Conversa pra boi dormir!']
                 var indexAleatorio = Math.floor(Math.random() * imgsDetector.length)
-                await client.sendFile(chatId, './media/img/comandos/detector/calibrando.png', 'detector.png', msgs_texto.diversao.detector.espera, id)
-                await client.sendFile(chatId, `./media/img/comandos/detector/${imgsDetector[indexAleatorio]}.png`, 'detector.png', "", quotedMsgObj.id)
+                await client.reply(chatId, msgs_texto.diversao.detector.espera, id)
+                await client.reply(chatId, `🤖 ${imgsDetector[indexAleatorio]}`, quotedMsgObj.id)
                 break
 
             case '!viadometro' :
