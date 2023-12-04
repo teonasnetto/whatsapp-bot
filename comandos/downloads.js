@@ -56,21 +56,12 @@ module.exports = downloads = async(client,message) => {
                 try{
                     var usuarioURL = body.slice(4).trim(), resultadosMidia = await api.obterMidiaFacebook(usuarioURL)
                     if (resultadosMidia) {
-                        await client.sendFile(chatId, resultadosMidia, 'fb-media.mp4', "📷 Media do facebook", id)
-                        .then(()=>{
-                            fs.unlinkSync(resultadosMidia)
-                        })
-                        .catch((err)=>{
-                            console.log(err)
-                            fs.unlinkSync(resultadosMidia)
-                            client.reply(chatId, msgs_texto.downloads.fb.erro_download, id)
-                        })
+                        await client.sendFileFromUrl(chatId, resultadosMidia, 'fb-media.mp4', "📷 Media do facebook", id)
                     } else {
                         client.reply(chatId, msgs_texto.downloads.fb.erro_download, id);
                     }
                 } catch(err){
                     client.reply(chatId,err.message,id)
-                    console.log(err)
                 }
                 break
 
@@ -120,15 +111,16 @@ module.exports = downloads = async(client,message) => {
                 if(args.length === 1) return await client.reply(chatId,erroComandoMsg(command),id)
                 try{
                     var usuarioTexto = body.slice(4).trim(), resultadoTiktok= await api.obterMidiaTiktok(usuarioTexto)
-                    await client.reply(chatId,criarTexto(msgs_texto.downloads.tk.espera, resultadoTiktok.autor_perfil, resultadoTiktok.autor_nome, resultadoTiktok.titulo, resultadoTiktok.duracao) ,id)
-                        const headers = {
-                            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.80 Safari/537.36",
-                            "referer": "https://www.tiktok.com/",
-                            "cookie": "tt_webid_v2=689854141086886123"
-                        }
-                        await client.sendFileFromUrl(chatId, resultadoTiktok.url, `tkvideo.mp4`,"", id, {headers}).catch(()=>{
-                            client.reply(chatId, msgs_texto.downloads.tk.erro_download, id)
-                        })
+                    await client.reply(chatId,criarTexto(msgs_texto.downloads.tk.espera, resultadoTiktok.autor, resultadoTiktok.titulo) ,id)
+                    await client.sendFile(chatId, resultadoTiktok.filePath, 'tk-video.mp4', "📷 Media do TikTok", id)
+                    .then(()=>{
+                        fs.unlinkSync(resultadoTiktok.filePath)
+                    })
+                    .catch((err)=>{
+                        console.log(err)
+                        fs.unlinkSync(resultadoTiktok.filePath)
+                        client.reply(chatId, msgs_texto.downloads.tk.erro_download, id)
+                    })
                 } catch(err){
                     await client.reply(chatId, err.message, id)
                 }

@@ -13,6 +13,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "@open-wa/wa-automate": "^4.66.3",
     "@open-wa/wa-decrypt": "^3.0.1",
+    "@sasmeee/tkdl": "^1.0.3",
     "@vitalets/google-translate-api": "^7.0.0",
     "@xaviabot/fb-downloader": "^1.0.14",
     "acrcloud": "^1.4.0",
@@ -37,7 +38,6 @@
     "node-gtts": "^2.0.2",
     "pretty-num": "^0.5.0",
     "prompt": "^1.1.0",
-    "tiktok-scraper": "^1.4.36",
     "twitter-url-direct": "^1.0.2",
     "youtube-sr": "^4.2.0",
     "ytdl-core": "4.10.0"
