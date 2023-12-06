@@ -264,6 +264,7 @@ module.exports = diversao = async(client,message) => {
                 catch(err){
                     await client.reply(chatId, err.message, id)
                 }
+                break
             }
 
             case "!sort":
@@ -294,6 +295,7 @@ module.exports = diversao = async(client,message) => {
                 catch(err){
                     await client.reply(chatId, err.message, id)
                 }
+                break
         }
     } catch(err){
         throw err
