@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       app_net:
         ipv4_address: 172.18.0.3

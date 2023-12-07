@@ -19,7 +19,7 @@ RUN apt-get update && \
     apt-get install -y google-chrome-stable
 
 # Copie o restante dos arquivos do projeto para o diretório de trabalho
-COPY . .
+COPY . /usr/src/app
 
 # Exponha a porta em que a aplicação será executada
 EXPOSE 4954
