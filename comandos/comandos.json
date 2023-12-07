@@ -140,7 +140,8 @@
         "!rtodos",
         "!r",
         "!verdados",
-        "!desligar"
+        "!desligar",
+        "!ativargrupo"
     ],
     "excecoes_contagem": [
         "!meusdados",

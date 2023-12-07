@@ -66,9 +66,9 @@ let admin = async(client,message) => {
                 if (!linkValido) return await client.reply(chatId, msgs_texto.admin.entrar_grupo.link_invalido, id)
                 // if (totalGrupos.length > 10) return await client.reply(chatId, msgs_texto.admin.entrar_grupo.maximo_grupos, id)
                 if (conviteInfo.status === 200) {
-                    client.joinGroupViaLink(linkGrupo).then(async (gId) => {
-                        await cadastrarGrupo(gId, "added", client)
-                        await client.reply(chatId, msgs_texto.admin.entrar_grupo.entrar_sucesso,id)
+                    client.joinGroupViaLink(linkGrupo).then(async () => {
+                        await cadastrarGrupo(conviteInfo.groupMetadata.id, "added", client);
+                        await client.reply(chatId, msgs_texto.admin.entrar_grupo.entrar_sucesso,id);
                     })
                 }
                 else {
@@ -76,6 +76,19 @@ let admin = async(client,message) => {
                 }
                 break}
 
+            case '!ativargrupo':{
+                var grupoInfo = await db.obterGrupo(groupId)
+                var estadoNovo = !grupoInfo.grupo_ativo
+                if (estadoNovo) {
+                    await db.alterarGrupoAtivo(groupId)
+                    await client.reply(chatId,  msgs_texto.grupo.ativargrupo.ligado, id)
+                } else {
+                    await db.alterarGrupoAtivo(groupId,false)
+                    await client.reply(chatId,  msgs_texto.grupo.ativargrupo.desligado, id)
+
+                }
+                break
+            }
             case '!sair':
                 if (!isGroupMsg) return await client.reply(chatId, msgs_texto.permissao.grupo, id)
                 await client.sendText(chatId, msgs_texto.admin.sair.sair_sucesso)
@@ -461,7 +474,7 @@ let admin = async(client,message) => {
                         let adminsGrupo = await client.getGroupAdmins(grupoExiste.id_grupo)
                         let botAdmin = adminsGrupo.includes(botNumber + '@c.us')
                         let linkGrupo = "Não Disponível"
-                        if(botAdmin) linkGrupo = await client.getGroupInviteLink(grupoExiste.id_grupo)
+                        if(botAdmin) linkGrupo = await client.getGroupInviteLink(grupo.id_grupo)
                         resposta += criarTexto(msgs_texto.admin.grupos.resposta_itens, grupoExiste.formattedTitle, grupoExiste.groupMetadata.participants.length, botAdmin ? "Sim" : "Não", linkGrupo)
                     }
                 }
