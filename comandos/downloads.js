@@ -57,6 +57,10 @@ module.exports = downloads = async(client,message) => {
                     var usuarioURL = body.slice(4).trim(), resultadosMidia = await api.obterMidiaFacebook(usuarioURL)
                     if (resultadosMidia) {
                         await client.sendFileFromUrl(chatId, resultadosMidia, 'fb-media.mp4', "📷 Media do facebook", id)
+                        .catch((err)=>{
+                            console.log(err)
+                            client.reply(chatId, msgs_texto.downloads.fb.erro_download, id)
+                        })
                     } else {
                         client.reply(chatId, msgs_texto.downloads.fb.erro_download, id);
                     }
@@ -103,7 +107,9 @@ module.exports = downloads = async(client,message) => {
                         })
                     }
                     else{
-                        await client.sendFile(chatId, resultadosMidia.media[0].url, `twitterimg.jpg`,"📷 Media do Twitter", id).catch(()=>{
+                        await client.sendFile(chatId, resultadosMidia.media[0].url, `twitterimg.jpg`,"📷 Media do Twitter", id)
+                        .catch((err)=>{
+                            console.log(err)
                             client.reply(chatId, msgs_texto.downloads.tw.erro_download, id)
                         })
                     }
@@ -149,7 +155,9 @@ module.exports = downloads = async(client,message) => {
                 try{
                     var resultadosImagens = await api.obterImagens(textoPesquisa, qtdFotos)
                     for(let imagem of resultadosImagens){
-                        client.sendFileFromUrl(chatId, imagem , "foto.jpg" , "", (qtdFotos == 1) ? id : "").catch(async ()=>{
+                        client.sendFileFromUrl(chatId, imagem , "foto.jpg" , "", (qtdFotos == 1) ? id : "")
+                        .catch(async (err)=>{
+                            console.log(err)
                             await client.sendText(chatId, msgs_texto.downloads.img.erro_imagem)
                         })
                     }
